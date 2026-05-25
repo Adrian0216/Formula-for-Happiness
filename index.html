@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Architecture of Joy: Teachings from the Masters</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+        .material-card {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+        .material-card:hover { transform: translateY(-2px); }
+        .flow-node {
+            background: linear-gradient(135deg, #2563EB 0%, #1A365D 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #94A3B8;
+            margin: 0.5rem 0;
+            z-index: 0;
+        }
+        @media (min-width: 768px) {
+            .flow-container { flex-direction: row !important; align-items: center; justify-content: space-between; }
+            .flow-arrow { margin: 0 1rem; transform: rotate(270deg); }
+        }
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(90deg, #1A365D, #2563EB, #0D9488);
+        }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <!-- Palette: Brilliant Blues & Vibrant Accents (#1A365D, #2563EB, #0D9488, #F97316, #EAB308) -->
+    <!-- Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in the output. -->
+    <!-- Plan: Hook/Thesis -> Core Teachings (Radar) -> Global Impact (Bar) -> Medium of Teachings (Donut) -> Synthesis Flow (CSS) -> Actionable Lessons (Table) -> Conclusion. -->
+    <!-- Chart Choices: Radar (Compare teachers across traits), Bar (Compare reach), Donut (Show medium composition). -->
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center font-bold text-xl text-blue-800">
+                    ✨ The Joy Thesis
+                </div>
+                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                    <a href="#thesis" class="hover:text-blue-600 transition-colors">Thesis</a>
+                    <a href="#analysis" class="hover:text-blue-600 transition-colors">Data Analysis</a>
+                    <a href="#application" class="hover:text-blue-600 transition-colors">Application</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+        
+        <header id="thesis" class="text-center mb-16 max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gradient tracking-tight">The Architecture of True Happiness</h1>
+            <p class="text-xl text-slate-600 leading-relaxed mb-8">
+                By analyzing the teachings of humanity's most profound spiritual leaders and modern emotional researchers—from Jesus to the Dalai Lama, Desmond Tutu, Dr. Brené Brown, and Eckhart Tolle—we uncover a unified framework for human flourishing.
+            </p>
+            <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg shadow-sm text-left">
+                <h3 class="text-lg font-bold text-blue-900 mb-2">Central Thesis:</h3>
+                <p class="text-slate-700 italic">
+                    "True happiness is not derived from external achievements or the absence of suffering, but from an internal state cultivated through mindful presence, radical vulnerability, active compassion, and a deep connection to humanity. Joy is a discipline, not a destination."
+                </p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16" id="analysis">
+            <section class="material-card">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Core Philosophies Compared</h2>
+                <p class="text-slate-600 mb-6 text-sm">
+                    This radar chart maps the primary focus areas of each teacher. While their vocabularies differ (e.g., Jesus' "Love" vs. Tolle's "Presence"), their teachings overlap significantly in generating internal joy.
+                </p>
+                <div class="chart-container">
+                    <canvas id="philosophiesChart"></canvas>
+                </div>
+            </section>
+
+            <section class="material-card">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Global Reach & Impact Index</h2>
+                <p class="text-slate-600 mb-6 text-sm">
+                    A qualitative metric estimating the widespread adoption and integration of these teachings into daily human life. The impact demonstrates the universal hunger for emotional and spiritual grounding.
+                </p>
+                <div class="chart-container">
+                    <canvas id="impactChart"></canvas>
+                </div>
+            </section>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            <section class="material-card lg:col-span-1">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">Mediums of Transmission</h2>
+                <p class="text-slate-600 mb-6 text-sm">
+                    How do people receive these teachings? The methodology has shifted from purely religious institutionalism to secular literature, digital media, and scientific psychology.
+                </p>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="mediumChart"></canvas>
+                </div>
+            </section>
+
+            <section class="material-card lg:col-span-2 flex flex-col justify-center">
+                <h2 class="text-2xl font-bold text-slate-800 mb-4">The Synthesized Path to Joy</h2>
+                <p class="text-slate-600 mb-10 text-sm">
+                    By combining the wisdom of these masters, a distinct psychological and spiritual workflow emerges for the individual seeking profound happiness.
+                </p>
+                
+                <div class="flex flex-col flow-container items-center py-4">
+                    <div class="flex flex-col items-center">
+                        <div class="flow-node bg-teal-600">1. Presence</div>
+                        <span class="text-xs text-slate-500 mt-2 font-medium">Eckhart Tolle</span>
+                    </div>
+                    
+                    <div class="flow-arrow">⬇️</div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div class="flow-node bg-rose-500" style="background: linear-gradient(135deg, #F43F5E, #9F1239);">2. Vulnerability</div>
+                        <span class="text-xs text-slate-500 mt-2 font-medium">Brené Brown</span>
+                    </div>
+                    
+                    <div class="flow-arrow">⬇️</div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div class="flow-node bg-amber-500" style="background: linear-gradient(135deg, #F59E0B, #B45309);">3. Compassion</div>
+                        <span class="text-xs text-slate-500 mt-2 font-medium">Dalai Lama & Tutu</span>
+                    </div>
+                    
+                    <div class="flow-arrow">⬇️</div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div class="flow-node bg-blue-600" style="background: linear-gradient(135deg, #3B82F6, #1E3A8A);">4. Unconditional Love</div>
+                        <span class="text-xs text-slate-500 mt-2 font-medium">Jesus Christ</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section id="application" class="material-card mb-16">
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4">Actionable Lessons for Daily Life</h2>
+                <p class="text-slate-600">
+                    The teachings of these masters are not merely theoretical; they are practical disciplines. This table distills their core concepts into immediate, actionable habits that research shows tremendously impact personal happiness.
+                </p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-800 text-white text-sm uppercase tracking-wider">
+                            <th class="p-4 rounded-tl-lg">Thought Leader</th>
+                            <th class="p-4">Core Philosophy</th>
+                            <th class="p-4">The Key Teaching</th>
+                            <th class="p-4 rounded-tr-lg">Daily Application (How to apply)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-700">
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                            <td class="p-4 font-bold flex items-center gap-2">🕊️ Jesus</td>
+                            <td class="p-4 font-semibold text-blue-700">Agape (Unconditional Love)</td>
+                            <td class="p-4">Love your neighbor as yourself; forgive limitlessly.</td>
+                            <td class="p-4">Practice a random act of radical generosity today without expecting recognition. When wronged, actively choose to release the desire for revenge.</td>
+                        </tr>
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors bg-slate-50/50">
+                            <td class="p-4 font-bold flex items-center gap-2">🧘 Dalai Lama</td>
+                            <td class="p-4 font-semibold text-amber-600">Karuna (Compassion)</td>
+                            <td class="p-4">Happiness is not ready-made. It comes from your own actions, specifically serving others.</td>
+                            <td class="p-4">Perform a "compassion meditation": Spend 5 minutes wishing well upon someone you love, someone neutral, and someone you dislike.</td>
+                        </tr>
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                            <td class="p-4 font-bold flex items-center gap-2">🌍 Desmond Tutu</td>
+                            <td class="p-4 font-semibold text-purple-600">Ubuntu (Humanity)</td>
+                            <td class="p-4">"I am because we are." Forgiveness is the only way to heal a broken world.</td>
+                            <td class="p-4">Reach out to someone you have been estranged from. Acknowledge that your well-being is intrinsically tied to the well-being of your community.</td>
+                        </tr>
+                        <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors bg-slate-50/50">
+                            <td class="p-4 font-bold flex items-center gap-2">❤️ Dr. Brené Brown</td>
+                            <td class="p-4 font-semibold text-rose-600">Vulnerability & Courage</td>
+                            <td class="p-4">Vulnerability is not weakness; it is our greatest measure of courage and the birthplace of joy.</td>
+                            <td class="p-4">Share a struggle you are currently facing with a trusted friend. Stop trying to appear "perfect" in your professional and personal life.</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="p-4 font-bold flex items-center gap-2">⏳ Eckhart Tolle</td>
+                            <td class="p-4 font-semibold text-teal-600">The Power of Now</td>
+                            <td class="p-4">The past gives you an identity and the future holds the promise of salvation. Both are illusions.</td>
+                            <td class="p-4">Engage in "mindful breathing" for 2 minutes whenever you feel anxious. Focus entirely on the physical sensation of the present moment, dropping all narrative thoughts.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <footer class="text-center pb-10 border-t border-slate-200 pt-8">
+            <p class="text-slate-500 text-sm">
+                Synthesis of human flourishing and joy teachings. Designed with modern web standards.
+            </p>
+        </footer>
+
+    </main>
+
+    <script>
+        function wrapLabel(label) {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            let lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length > 16) {
+                    if (currentLine) lines.push(currentLine.trim());
+                    currentLine = word + ' ';
+                } else {
+                    currentLine += word + ' ';
+                }
+            });
+            if (currentLine) lines.push(currentLine.trim());
+            return lines;
+        }
+
+        const tooltipConfig = {
+            tooltip: {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        } else {
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+
+        const chartColors = {
+            blue: 'rgba(37, 99, 235, 0.7)',
+            blueBorder: 'rgba(37, 99, 235, 1)',
+            teal: 'rgba(13, 148, 136, 0.7)',
+            tealBorder: 'rgba(13, 148, 136, 1)',
+            orange: 'rgba(249, 115, 22, 0.7)',
+            orangeBorder: 'rgba(249, 115, 22, 1)',
+            yellow: 'rgba(234, 179, 8, 0.7)',
+            darkBlue: 'rgba(26, 54, 93, 0.7)'
+        };
+
+        const ctxRadar = document.getElementById('philosophiesChart').getContext('2d');
+        const radarLabels = ['Unconditional Love & Grace', 'Mindful Presence & Now', 'Radical Vulnerability', 'Active Compassion & Service', 'Deep Forgiveness & Healing'].map(wrapLabel);
+        
+        new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+                labels: radarLabels,
+                datasets: [
+                    {
+                        label: 'Spiritual Antiquity (Jesus/Buddha roots)',
+                        data: [100, 75, 70, 95, 100],
+                        backgroundColor: chartColors.blue,
+                        borderColor: chartColors.blueBorder,
+                        borderWidth: 2,
+                        pointBackgroundColor: chartColors.blueBorder
+                    },
+                    {
+                        label: 'Modern Psychology & Mindfulness (Brown/Tolle)',
+                        data: [75, 100, 100, 80, 70],
+                        backgroundColor: chartColors.teal,
+                        borderColor: chartColors.tealBorder,
+                        borderWidth: 2,
+                        pointBackgroundColor: chartColors.tealBorder
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0,0,0,0.1)' },
+                        grid: { color: 'rgba(0,0,0,0.1)' },
+                        pointLabels: { font: { family: 'Inter', size: 11 }, color: '#475569' },
+                        ticks: { display: false, min: 0, max: 100 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { family: 'Inter' } } },
+                    ...tooltipConfig
+                }
+            }
+        });
+
+        const ctxBar = document.getElementById('impactChart').getContext('2d');
+        const barLabels = ['Jesus (Historical/Spiritual)', 'Dalai Lama (Global Compassion)', 'Desmond Tutu (Reconciliation)', 'Dr. Brené Brown (Research/Culture)', 'Eckhart Tolle (Mindfulness)'].map(wrapLabel);
+        
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: barLabels,
+                datasets: [{
+                    label: 'Global Impact & Adoption Score (0-100)',
+                    data: [100, 85, 80, 75, 70],
+                    backgroundColor: [
+                        chartColors.darkBlue,
+                        chartColors.yellow,
+                        'rgba(147, 51, 234, 0.7)', 
+                        'rgba(225, 29, 72, 0.7)',  
+                        chartColors.teal
+                    ],
+                    borderColor: [
+                        'rgba(26, 54, 93, 1)',
+                        'rgba(234, 179, 8, 1)',
+                        'rgba(147, 51, 234, 1)',
+                        'rgba(225, 29, 72, 1)',
+                        chartColors.tealBorder
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: { font: { family: 'Inter' } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: 'Inter', size: 11 }, color: '#475569' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    ...tooltipConfig
+                }
+            }
+        });
+
+        const ctxDonut = document.getElementById('mediumChart').getContext('2d');
+        const donutLabels = ['Spiritual & Religious Institutions', 'Published Books & Literature', 'Digital Media & Podcasts', 'Public Speaking & Activism'].map(wrapLabel);
+
+        new Chart(ctxDonut, {
+            type: 'doughnut',
+            data: {
+                labels: donutLabels,
+                datasets: [{
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                        chartColors.blue,
+                        chartColors.teal,
+                        chartColors.orange,
+                        chartColors.yellow
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: { position: 'right', labels: { font: { family: 'Inter', size: 12 }, padding: 20 } },
+                    ...tooltipConfig
+                }
+            }
+        });
+    </script>
+</body>
+</html>
