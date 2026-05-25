@@ -5,10 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Architecture of Joy: Teachings from the Masters</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: "#0F172A",
+                    }
+                }
+            }
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; color: #0F172A; }
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         .chart-container {
             position: relative;
             width: 100%;
@@ -25,11 +39,19 @@
             .chart-container { height: 400px; }
         }
         .material-card {
-            background-color: #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
             padding: 1.5rem;
-            transition: transform 0.2s ease-in-out;
+            transition: transform 0.2s ease-in-out, background-color 0.3s ease, box-shadow 0.2s ease;
+        }
+        .dark .material-card {
+            background-color: rgba(15, 23, 42, 0.6);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .material-card:hover { transform: translateY(-2px); }
         .flow-node {
@@ -59,25 +81,55 @@
             -webkit-text-fill-color: transparent;
             background-image: linear-gradient(90deg, #1A365D, #2563EB, #0D9488);
         }
+        @keyframes breath {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+        }
+        .animate-breath { animation: breath 8s ease-in-out infinite; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="antialiased pb-20">
+<body class="antialiased pb-20 bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+
+    <div id="zen-overlay" class="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-2xl flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-700">
+        <button id="zen-close" class="absolute top-8 right-8 p-3 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+        <div class="relative flex items-center justify-center">
+            <div class="w-48 h-48 md:w-64 md:h-64 rounded-full bg-blue-500/30 animate-breath blur-xl"></div>
+            <div class="w-32 h-32 md:w-48 md:h-48 rounded-full border-2 border-blue-400/50 absolute flex items-center justify-center">
+                <span id="zen-text" class="text-2xl md:text-3xl font-light text-white tracking-widest uppercase">Inhale</span>
+            </div>
+        </div>
+        <p class="mt-24 text-slate-400 text-center max-w-xs mx-auto font-light leading-relaxed">Focus on your breath. Follow the circle.</p>
+    </div>
 
     <!-- Palette: Brilliant Blues & Vibrant Accents (#1A365D, #2563EB, #0D9488, #F97316, #EAB308) -->
     <!-- Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in the output. -->
     <!-- Plan: Hook/Thesis -> Core Teachings (Radar) -> Global Impact (Bar) -> Medium of Teachings (Donut) -> Synthesis Flow (CSS) -> Actionable Lessons (Table) -> Conclusion. -->
     <!-- Chart Choices: Radar (Compare teachers across traits), Bar (Compare reach), Donut (Show medium composition). -->
 
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0 flex items-center font-bold text-xl text-blue-800">
+                <div class="flex-shrink-0 flex items-center font-bold text-xl text-blue-800 dark:text-blue-400">
                     ✨ The Joy Thesis
                 </div>
-                <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
-                    <a href="#thesis" class="hover:text-blue-600 transition-colors">Thesis</a>
-                    <a href="#analysis" class="hover:text-blue-600 transition-colors">Data Analysis</a>
-                    <a href="#application" class="hover:text-blue-600 transition-colors">Application</a>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-600 dark:text-slate-300">
+                        <a href="#thesis" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Thesis</a>
+                        <a href="#analysis" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Data Analysis</a>
+                        <a href="#application" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Application</a>
+                    </div>
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:ring-2 hover:ring-blue-400 transition-all">
+                        <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                        <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -85,20 +137,25 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
         
-        <header id="thesis" class="text-center mb-16 max-w-4xl mx-auto">
+        <header id="thesis" class="text-center mb-16 max-w-4xl mx-auto" data-aos="fade-up">
             <h1 class="text-4xl md:text-6xl font-bold mb-6 text-gradient tracking-tight">The Architecture of True Happiness</h1>
             <p class="text-xl text-slate-600 leading-relaxed mb-8">
                 By analyzing the teachings of humanity's most profound spiritual leaders and modern emotional researchers—from Jesus to the Dalai Lama, Desmond Tutu, Dr. Brené Brown, and Eckhart Tolle—we uncover a unified framework for human flourishing.
             </p>
-            <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg shadow-sm text-left">
-                <h3 class="text-lg font-bold text-blue-900 mb-2">Central Thesis:</h3>
-                <p class="text-slate-700 italic">
+            <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-600 p-6 rounded-r-lg shadow-sm text-left mb-8">
+                <h3 class="text-lg font-bold text-blue-900 dark:text-blue-300 mb-2">Central Thesis:</h3>
+                <p class="text-slate-700 dark:text-slate-300 italic">
                     "True happiness is not derived from external achievements or the absence of suffering, but from an internal state cultivated through mindful presence, radical vulnerability, active compassion, and a deep connection to humanity. Joy is a discipline, not a destination."
                 </p>
             </div>
+
+            <button id="zen-trigger" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold transition-all shadow-lg hover:shadow-blue-500/25">
+                <i data-lucide="wind" class="w-5 h-5"></i>
+                Practice Mindfulness
+            </button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16" id="analysis">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16" id="analysis" data-aos="fade-up">
             <section class="material-card">
                 <h2 class="text-2xl font-bold text-slate-800 mb-4">Core Philosophies Compared</h2>
                 <p class="text-slate-600 mb-6 text-sm">
@@ -131,7 +188,7 @@
                 </div>
             </section>
 
-            <section class="material-card lg:col-span-2 flex flex-col justify-center">
+            <section id="synthesis" class="material-card lg:col-span-2 flex flex-col justify-center" data-aos="fade-up">
                 <h2 class="text-2xl font-bold text-slate-800 mb-4">The Synthesized Path to Joy</h2>
                 <p class="text-slate-600 mb-10 text-sm">
                     By combining the wisdom of these masters, a distinct psychological and spiritual workflow emerges for the individual seeking profound happiness.
@@ -167,7 +224,7 @@
             </section>
         </div>
 
-        <section id="application" class="material-card mb-16">
+        <section id="application" class="material-card mb-16" data-aos="fade-up">
             <div class="mb-8">
                 <h2 class="text-3xl font-bold text-slate-800 mb-4">Actionable Lessons for Daily Life</h2>
                 <p class="text-slate-600">
@@ -175,7 +232,7 @@
                 </p>
             </div>
 
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto custom-scrollbar">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-800 text-white text-sm uppercase tracking-wider">
@@ -221,8 +278,48 @@
             </div>
         </section>
 
-        <footer class="text-center pb-10 border-t border-slate-200 pt-8">
-            <p class="text-slate-500 text-sm">
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+            <div class="material-card flex flex-col h-full">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg text-amber-600">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Daily Wisdom</h2>
+                </div>
+                <div id="wisdom-container" class="flex-grow flex flex-col justify-center text-center p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-700 mb-6">
+                    <p id="wisdom-quote" class="text-xl italic text-slate-700 dark:text-slate-300 mb-4">"Happiness is not something ready made. It comes from your own actions."</p>
+                    <p id="wisdom-author" class="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">— Dalai Lama</p>
+                </div>
+                <button id="new-wisdom" class="w-full py-3 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 text-white rounded-lg font-semibold transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    Reflect on New Wisdom
+                </button>
+            </div>
+
+            <div class="material-card">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600">
+                        <i data-lucide="book-open" class="w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100">Glimmer Journal</h2>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">A "glimmer" is a micro-moment of joy. Capture one today.</p>
+                <div class="space-y-4">
+                    <div class="flex gap-2">
+                        <input type="text" id="glimmer-input" placeholder="What made you smile?" class="flex-grow p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                        <button id="add-glimmer" class="p-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all shadow-lg shadow-emerald-500/20">
+                            <i data-lucide="plus" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                    <ul id="glimmer-list" class="space-y-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Glimmers will appear here -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center pb-10 border-t border-slate-200 dark:border-slate-800 pt-8">
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
                 Synthesis of human flourishing and joy teachings. Designed with modern web standards.
             </p>
         </footer>
@@ -396,6 +493,150 @@
                 }
             }
         });
+    </script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+        lucide.createIcons();
+
+        // Dark Mode Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        // Check for saved theme or default to system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // Zen Mode Logic
+        const zenTrigger = document.getElementById('zen-trigger');
+        const zenOverlay = document.getElementById('zen-overlay');
+        const zenClose = document.getElementById('zen-close');
+        const zenText = document.getElementById('zen-text');
+        let zenInterval;
+
+        const startZen = () => {
+            zenOverlay.classList.remove('hidden');
+            setTimeout(() => zenOverlay.classList.replace('opacity-0', 'opacity-100'), 10);
+
+            let phase = 0; // 0: Inhale, 1: Hold, 2: Exhale
+            const phases = ["Inhale", "Hold", "Exhale"];
+            zenText.innerText = phases[phase];
+
+            zenInterval = setInterval(() => {
+                phase = (phase + 1) % 3;
+                zenText.innerText = phases[phase];
+            }, 4000);
+        };
+
+        const stopZen = () => {
+            zenOverlay.classList.replace('opacity-100', 'opacity-0');
+            clearInterval(zenInterval);
+            setTimeout(() => zenOverlay.classList.add('hidden'), 700);
+        };
+
+        zenTrigger.addEventListener('click', startZen);
+        zenClose.addEventListener('click', stopZen);
+
+        // Daily Wisdom Logic
+        const quotes = [
+            { text: "Happiness is not something ready made. It comes from your own actions.", author: "Dalai Lama" },
+            { text: "Love your neighbor as yourself.", author: "Jesus Christ" },
+            { text: "The primary cause of unhappiness is never the situation but your thoughts about it.", author: "Eckhart Tolle" },
+            { text: "Vulnerability is the birthplace of love, belonging, joy, courage, empathy, and creativity.", author: "Brené Brown" },
+            { text: "My humanity is bound up in yours, for we can only be human together.", author: "Desmond Tutu" },
+            { text: "If you want others to be happy, practice compassion. If you want to be happy, practice compassion.", author: "Dalai Lama" },
+            { text: "Forgiveness is the attribute of the strong.", author: "Mahatma Gandhi" },
+            { text: "The power of now is the power of your presence.", author: "Eckhart Tolle" }
+        ];
+
+        const quoteEl = document.getElementById('wisdom-quote');
+        const authorEl = document.getElementById('wisdom-author');
+        const newWisdomBtn = document.getElementById('new-wisdom');
+
+        newWisdomBtn.addEventListener('click', () => {
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            quoteEl.style.opacity = 0;
+            authorEl.style.opacity = 0;
+            setTimeout(() => {
+                quoteEl.innerText = `"${randomQuote.text}"`;
+                authorEl.innerText = `— ${randomQuote.author}`;
+                quoteEl.style.opacity = 1;
+                authorEl.style.opacity = 1;
+            }, 300);
+        });
+        quoteEl.style.transition = 'opacity 0.3s ease';
+        authorEl.style.transition = 'opacity 0.3s ease';
+
+        // Glimmer Journal Logic
+        const glimmerInput = document.getElementById('glimmer-input');
+        const addGlimmerBtn = document.getElementById('add-glimmer');
+        const glimmerList = document.getElementById('glimmer-list');
+
+        const loadGlimmers = () => {
+            const glimmers = JSON.parse(localStorage.getItem('glimmers') || '[]');
+            glimmerList.innerHTML = '';
+            glimmers.forEach((g, i) => {
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-700 text-sm group animate-fade-in";
+
+                const span = document.createElement('span');
+                span.className = "text-slate-700 dark:text-slate-300";
+                span.textContent = g;
+
+                const btn = document.createElement('button');
+                btn.className = "text-slate-400 hover:text-rose-500 transition-colors";
+                btn.setAttribute('aria-label', 'Remove glimmer');
+
+                const icon = document.createElement('i');
+                icon.setAttribute('data-lucide', 'trash-2');
+                icon.className = "w-4 h-4";
+
+                btn.appendChild(icon);
+                btn.addEventListener('click', () => removeGlimmer(i));
+
+                li.appendChild(span);
+                li.appendChild(btn);
+                glimmerList.appendChild(li);
+            });
+            lucide.createIcons();
+        };
+
+        const addGlimmer = () => {
+            const text = glimmerInput.value.trim();
+            if (text) {
+                const glimmers = JSON.parse(localStorage.getItem('glimmers') || '[]');
+                glimmers.unshift(text);
+                localStorage.setItem('glimmers', JSON.stringify(glimmers));
+                glimmerInput.value = '';
+                loadGlimmers();
+            }
+        };
+
+        const removeGlimmer = (index) => {
+            const glimmers = JSON.parse(localStorage.getItem('glimmers') || '[]');
+            glimmers.splice(index, 1);
+            localStorage.setItem('glimmers', JSON.stringify(glimmers));
+            loadGlimmers();
+        };
+
+        addGlimmerBtn.addEventListener('click', addGlimmer);
+        glimmerInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addGlimmer(); });
+        loadGlimmers();
     </script>
 </body>
 </html>
